@@ -13,24 +13,17 @@ import java.util.concurrent.Semaphore;
 
 public class Main {
     public static void main(String[] args) {
-        int nuberOfThread = 10;
-        int nuberOfpermitions = 5;
-        int numberIntervalo = 10;
+        int numberOfThread = 4;
+        int numberOfpermitions = 5;
 
-        ArrayList<Semaphore> arraySemaphore = new ArrayList<>();
-        for (int i = 0; i < numberIntervalo; i++) {
-            arraySemaphore.add(i, new Semaphore(nuberOfpermitions,true));
-        }
 
-        ArrayList<Thread> arrayBarrier = new ArrayList<>();
-        for (int i = 0; i < numberIntervalo; i++) {
-            arrayBarrier.add(i, new Thread(new UnleashBarrier( arraySemaphore.get(i), nuberOfpermitions, nuberOfThread, i ))) ;
-            arrayBarrier.get(i).start();
-        }
-
+        Semaphore semaphore = new Semaphore(numberOfpermitions, true);
+        Semaphore semaphore2 = new Semaphore(numberOfpermitions, true);
+        Thread barrier = new Thread(new UnleashBarrier(semaphore, semaphore2, numberOfpermitions, numberOfThread));
+        barrier.start();
         ArrayList<Thread> arrayThread = new ArrayList<>();
-        for (int i = 0; i < nuberOfThread; i++) {
-            arrayThread.add(i, new Thread(new AguardaBarreira( arraySemaphore ))) ;
+        for (int i = 0; i < numberOfThread; i++) {
+            arrayThread.add(i, new Thread(new AguardaBarreira( semaphore, semaphore2 ))) ;
             arrayThread.get(i).start();
         }
     }
